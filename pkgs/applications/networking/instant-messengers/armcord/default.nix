@@ -39,7 +39,7 @@
 
 stdenv.mkDerivation rec {
   pname = "armcord";
-  version = "3.2.4";
+  version = "3.2.4-e27";
 
   src =
     let
@@ -47,12 +47,12 @@ stdenv.mkDerivation rec {
     in
       {
         x86_64-linux = fetchurl {
-          url = "${base}/v${version}/ArmCord_${version}_amd64.deb";
-          hash = "sha256-IUHcDHIJeGx7QKjxl3fUFHqUfs1JdIFxesvDXt3mVw0=";
+          url = "${base}/v${version}/ArmCord_${builtins.head (lib.splitString "-" version)}_amd64.deb";
+          hash = "sha256-MOzd82yMVgG5tOIoFom7dCzeaMZXCfmSmQg3TUjuh6k=";
         };
         aarch64-linux = fetchurl {
-          url = "${base}/v${version}/ArmCord_${version}_arm64.deb";
-          hash = "sha256-TWVlEjakdRyZmOuBq9HLO+R7y5jmgstFtyEHjf8nxxM=";
+          url = "${base}/v${version}/ArmCord_${builtins.head (lib.splitString "-" version)}_arm64.deb";
+          hash = "";
         };
       }.${stdenv.hostPlatform.system} or (throw "Unsupported system: ${stdenv.hostPlatform.system}");
 
@@ -137,6 +137,5 @@ stdenv.mkDerivation rec {
     license = licenses.osl3;
     maintainers = with maintainers; [ ludovicopiero wrmilling ];
     platforms = [ "x86_64-linux" "aarch64-linux" ];
-    knownVulnerabilities = [ "CVE-2023-4863" ];
   };
 }
