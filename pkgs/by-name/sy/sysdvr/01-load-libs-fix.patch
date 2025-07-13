@@ -1,0 +1,53 @@
+diff --git a/Client/Platform/DynamicLibraryLoader.cs b/Client/Platform/DynamicLibraryLoader.cs
+index e9a9ce9..2f20808 100644
+--- a/Client/Platform/DynamicLibraryLoader.cs
++++ b/Client/Platform/DynamicLibraryLoader.cs
+@@ -83,7 +83,7 @@ namespace SysDVR.Client.Platform
+             if (Program.IsWindows) libext = ".dll";
+             else if (Program.IsMacOs) libext = ".dylib";
+ 
+-            if (!libraryName.EndsWith(libext))
++            if (!libraryName.Contains(libext))
+                 libraryName += libext;
+ 
+             // Is an override set ?
+@@ -97,6 +97,16 @@ namespace SysDVR.Client.Platform
+             if (Program.IsLinux)
+                 yield return Path.Combine("/app/lib", libraryName);
+ 
++            if (Program.IsLinux)
++            {
++                var libPath = Environment.GetEnvironmentVariable("LD_LIBRARY_PATH");
++                var libPaths = libPath.Split(":");
++                foreach (var path in libPaths)
++                {
++                    yield return Path.Combine(path, libraryName);
++                }
++            }
++
+             // Maybe it's in the working directory
+             yield return libraryName;
+         }
+@@ -135,14 +145,19 @@ namespace SysDVR.Client.Platform
+                     continue;
+                 }
+ 
++                var linkRes = File.ResolveLinkTarget(candidate, true);
++                var libPath = candidate;
++                if (linkRes != null)
++                    libPath = linkRes.FullName;
++
+                 if (debug)
+-                    Console.WriteLine($"Trying to load {candidate}");
++                    Console.WriteLine($"Trying to load {libPath}");
+ 
+-                if (NativeLibrary.TryLoad(candidate, out var result))
++                if (NativeLibrary.TryLoad(libPath, out var result))
+                     return result;
+ 
+                 if (debug)
+-                    Console.WriteLine($"Failed to load {candidate}");
++                    Console.WriteLine($"Failed to load {libPath}");
+             }
+ 
+             // Try to load the library from the OS.

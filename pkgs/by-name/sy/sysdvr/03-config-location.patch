@@ -1,0 +1,22 @@
+diff --git a/Client/Platform/Resources.cs b/Client/Platform/Resources.cs
+index e655eb7..af1c19d 100644
+--- a/Client/Platform/Resources.cs
++++ b/Client/Platform/Resources.cs
+@@ -148,7 +148,16 @@ namespace SysDVR.Client.Platform
+ 				}
+ 			}
+ 			else
+-				path = AppContext.BaseDirectory;
++            {
++				if (Program.IsLinux)
++				{
++					path = Environment.GetEnvironmentVariable("XDG_CONFIG_HOME");
++					if (string.IsNullOrWhiteSpace(path))
++						path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".sysdvr");
++				} else {
++                    path = AppContext.BaseDirectory;
++                }
++            }
+ 
+ 			return path;
+ 		}

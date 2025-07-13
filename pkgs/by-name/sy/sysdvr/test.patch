@@ -1,0 +1,12 @@
+diff --git a/Client/Client.csproj b/Client/Client.csproj
+index dc12880..d39a7a7 100644
+--- a/Client/Client.csproj
++++ b/Client/Client.csproj
+@@ -13,7 +13,6 @@
+ 		<RollForward>Major</RollForward>
+ 		<Nullable>annotations</Nullable>
+ 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+-		<PublishAot>true</PublishAot>
+ 	</PropertyGroup>
+ 
+ 	<!--Versioning: I don't like the default output of GitInfo since tags may not always correlate to the expected release version, for example in CI builds before the github tag/release is made-->
